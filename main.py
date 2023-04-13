@@ -26,19 +26,20 @@ def my_encrypt_ecb(path: str):
     output.write(header)
 
     while bytes_left > 0:
+        # Figure out how many bytes to read from the file. Either a full block or everything left.
         bytes_to_read = BLOCK_SIZE if bytes_left >= BLOCK_SIZE else bytes_left
         bytes_left -= bytes_to_read
 
+        # Read unencrypted block
         block = img.read(bytes_to_read)
 
-        block += b'\x00' * (16-bytes_to_read)
+        # Pad if necessary, PKCS#7 compliant (hopefully lol)
+        block += (16-bytes_to_read).to_bytes(1, byteorder='big') * (16-bytes_to_read)
 
-        block_encrypted = cipher.encrypt(block)
+        # Encrypt and knock off padding
+        block_encrypted = cipher.encrypt(block)[:bytes_to_read]
 
-        block_encrypted = block_encrypted[:bytes_to_read]
-
-        # TODO: add handling for block length < 128 (padding scheme)
-
+        # Write the encrypted block
         output.write(block_encrypted)
 
     img.close()
