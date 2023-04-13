@@ -40,7 +40,7 @@ def my_ecb(path: str, mode: chr, key=None):
         bytes_to_read = BLOCK_SIZE if bytes_left >= BLOCK_SIZE else bytes_left
         bytes_left -= bytes_to_read
 
-        # Read unencrypted block
+        # Read unprocessed block
         block = img.read(bytes_to_read)
 
         # Pad if necessary, PKCS#7 compliant (hopefully lol)
@@ -50,7 +50,7 @@ def my_ecb(path: str, mode: chr, key=None):
         block_processed = cipher.encrypt(block) if mode == 'e' else cipher.decrypt(block)
         block_processed = block_processed[:bytes_to_read]
 
-        # Write the encrypted block
+        # Write the processed block
         output.write(block_processed)
 
     img.close()
