@@ -24,8 +24,6 @@ def my_encrypt_ecb(path: str):
     output = open(path.replace(".bmp", "") + "_encrypted.bmp", "xwb")
     output.write(header)
 
-    # test
-
     while bytes_left > 0:
         bytes_to_read = 128 if bytes_left >= 128 else bytes_left
         bytes_left -= bytes_to_read
