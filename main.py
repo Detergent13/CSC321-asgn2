@@ -1,8 +1,6 @@
 import os
-
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
-from os import fstat
 
 HEADER_SIZE = 54
 BLOCK_SIZE = 16
@@ -33,7 +31,11 @@ def my_encrypt_ecb(path: str):
 
         block = img.read(bytes_to_read)
 
+        block += b'\x00' * (16-bytes_to_read)
+
         block_encrypted = cipher.encrypt(block)
+
+        block_encrypted = block_encrypted[:bytes_to_read]
 
         # TODO: add handling for block length < 128 (padding scheme)
 
